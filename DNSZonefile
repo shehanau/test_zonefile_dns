@@ -1,0 +1,51 @@
+; ===========================================================================
+; TEST PURPOSE ONLY: GitHub Pages Configuration for DNS.com
+; DISCLAIMER: No liability is assumed for the use of this file. 
+; This is a technical template for experimental/testing use.
+; ===========================================================================
+
+$ORIGIN example.com.        ; The root domain for this zone
+$TTL 3600                   ; Default cache time: 1 hour
+
+; --- SOA (Start of Authority) ---
+; Defines core zone parameters. Admin email: admin@example.com
+@   IN  SOA  ns1.dns.com. admin.example.com. (
+             2026042901 ; Serial: YYYYMMDDNN format (Increment after edits)
+             3600       ; Refresh: How often secondary servers check for updates
+             1800       ; Retry: Wait time if the refresh fails
+             604800     ; Expire: Time before secondary stops serving data
+             600        ; Minimum: Cache time for "Not Found" responses
+)
+
+; --- Name Servers ---
+; These point to DNS.com's infrastructure
+@   IN  NS   ns1.dns.com.
+@   IN  NS   ns2.dns.com.
+@   IN  NS   ns3.dns.com.
+@   IN  NS   ns4.dns.com.
+
+; --- GitHub Pages Apex (A Records) ---
+; These 4 IPs are GitHub's global edge servers for custom domains.
+; Using 4 records provides redundancy for your root (example.com).
+@   IN  A    185.199.108.153
+@   IN  A    185.199.109.153
+@   IN  A    185.199.110.153
+@   IN  A    185.199.111.153
+
+; --- Subdomain Aliases (CNAME) ---
+; Maps www.example.com to your specific GitHub Pages site.
+; Replace 'your-username' with your actual GitHub account name.
+www IN  CNAME  your-username.github.io.
+
+; --- Security & Verification (TXT) ---
+; GitHub uses this to prevent "domain hijacking" and verify ownership.
+; Obtain your unique string from: GitHub User Settings > Pages.
+_github-pages-challenge-your-username IN TXT "test-verification-code-12345"
+
+; --- Email Safety (Optional Test Record) ---
+; Prevents others from sending mail on behalf of this test domain.
+@   IN  TXT  "v=spf1 -all"
+
+; ===========================================================================
+; END OF TEST ZONE FILE
+; ===========================================================================
